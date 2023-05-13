@@ -1,1 +1,0 @@
-TriggerEvent('chat:addSuggestion', '/id', '', {})
