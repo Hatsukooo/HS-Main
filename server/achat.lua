@@ -32,15 +32,21 @@ ESX.RegisterServerCallback('esx_chatforadmin:GetGroup', function(source, cb)
     end
 end)
 
+if Config.EnableATeamChat then
+    RegisterCommand('a', function(source, args, rawCommand)
+        local xPlayer = ESX.GetPlayerFromId(source)
+        Group = xPlayer.getGroup()
 
-RegisterCommand('a', function(source, args, rawCommand)
-    local xPlayer = ESX.GetPlayerFromId(source)
-    Group = xPlayer.getGroup()
+        if Group ~= 'user' then
+            TriggerClientEvent("sendMessageAdmin", -1, xPlayer.getGroup(), GetPlayerName(source), table.concat(args, " "))
+        end
+    end, false)
+end
 
-    if Group ~= 'user' then
-        TriggerClientEvent("sendMessageAdmin", -1, xPlayer.getGroup(), GetPlayerName(source), table.concat(args, " "))
-    end
-end, false)
+if not Config.EnableATeamChat then
+   print ("Admin Team Chat feature disabled")
+end
+
 
 function stringsplit(inputstr, sep)
     if sep == nil then

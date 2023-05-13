@@ -51,32 +51,37 @@ local function ensureAnimDict(animDict)
 	end
 	return animDict
 end
+if Config.EnableCarry then
+    RegisterCommand("carry", function(source, args)
+    	if not carry.InProgress then
+    		local closestPlayer = GetClosestPlayer(3)
+    		if closestPlayer then
+    			local targetSrc = GetPlayerServerId(closestPlayer)
+    			if targetSrc ~= -1 then
+    				carry.InProgress = true
+    				carry.targetSrc = targetSrc
+    				TriggerServerEvent("CarryPeople:sync", targetSrc)
+    				ensureAnimDict(carry.personCarrying.animDict)
+    				carry.type = "carrying"
+    			else
+    			exports['okokNotify']:Alert("Server", "Noone nearby", 5000, 'info')
+    			end
+    		else
+    			exports['okokNotify']:Alert("Server", "Noone nearby", 5000, 'info')
+    		end
+    	else
+    		carry.InProgress = false
+    		ClearPedSecondaryTask(PlayerPedId())
+    		DetachEntity(PlayerPedId(), true, false)
+    		TriggerServerEvent("CarryPeople:stop", carry.targetSrc)
+    		carry.targetSrc = 0
+    	end
+    end, false)
+end
 
-RegisterCommand("carry", function(source, args)
-	if not carry.InProgress then
-		local closestPlayer = GetClosestPlayer(3)
-		if closestPlayer then
-			local targetSrc = GetPlayerServerId(closestPlayer)
-			if targetSrc ~= -1 then
-				carry.InProgress = true
-				carry.targetSrc = targetSrc
-				TriggerServerEvent("CarryPeople:sync", targetSrc)
-				ensureAnimDict(carry.personCarrying.animDict)
-				carry.type = "carrying"
-			else
-				TriggerEvent('QS_Notify:Notify', "Kolem tebe není žádná osoba", "error", 5000)
-			end
-		else
-			TriggerEvent('QS_Notify:Notify', "Kolem tebe není žádná osoba", "error", 5000)
-		end
-	else
-		carry.InProgress = false
-		ClearPedSecondaryTask(PlayerPedId())
-		DetachEntity(PlayerPedId(), true, false)
-		TriggerServerEvent("CarryPeople:stop", carry.targetSrc)
-		carry.targetSrc = 0
-	end
-end, false)
+if not Config.EnableCarry then
+    print("Carry feature disabled")
+end
 
 RegisterNetEvent("CarryPeople:syncTarget")
 AddEventHandler("CarryPeople:syncTarget", function(targetSrc)

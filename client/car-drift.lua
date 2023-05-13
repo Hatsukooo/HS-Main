@@ -13,6 +13,7 @@ local handleMods = {
 local ped, vehicle
 local driftMode = false
 
+if Config.EnableCarDrift then
 Citizen.CreateThread(function()
 	while true do
 		Wait(1)
@@ -37,7 +38,9 @@ Citizen.CreateThread(function()
 		end
 	end
 end)
-
+else
+ print("Car Drift feature Disabled")
+end
 function ToggleDrift(vehicle)
 	local modifier = 1
 

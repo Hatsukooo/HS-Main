@@ -1,3 +1,4 @@
+if Config.EnableDiscordRP then
 Citizen.CreateThread(function()
 	while true do
 		SetDiscordAppId() -- Discord ID
@@ -8,14 +9,19 @@ Citizen.CreateThread(function()
 
 		SetRichPresence("Hráči: " .. #players .. "/64 | ID: " .. id)
 
-		SetDiscordRichPresenceAsset("") -- Velký obrázek
-		SetDiscordRichPresenceAssetText(".gg/") -- Text na velkém obrázku
+		SetDiscordRichPresenceAsset("") -- Big Picture
+		SetDiscordRichPresenceAssetText(".gg/") -- Text on Big Picture
 
-		SetDiscordRichPresenceAssetSmall('') -- Malý obrázek
-		SetDiscordRichPresenceAssetSmallText(".gg/") -- Text na malém obrázku
+		SetDiscordRichPresenceAssetSmall('') -- Small Picture
+		SetDiscordRichPresenceAssetSmallText(".gg/") -- Text on small picture
 
-		SetDiscordRichPresenceAction(0, "👉|Discord|👉", "https://discord.gg/")
-		SetDiscordRichPresenceAction(1, "💻|Fivem Connect|💻", "https://discord.gg/")
+		SetDiscordRichPresenceAction(0, "Button 1", "https://discord.gg/")
+		SetDiscordRichPresenceAction(1, "Button 2", "https://discord.gg/")
 		Citizen.Wait(10000)
 	end
 end)
+end
+
+if not Config.EnableDiscordRP then
+    print("DiscordRP feature disabled")
+end

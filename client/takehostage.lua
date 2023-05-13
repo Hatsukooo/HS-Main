@@ -72,9 +72,15 @@ RegisterCommand("takehostage", function()
 	callTakeHostage()
 end)
 
-RegisterCommand("th", function()
-	callTakeHostage()
-end)
+if Config.EnableTakeHostage then
+    RegisterCommand("th", function()
+    	callTakeHostage()
+    end)
+end
+
+if not Config.EnableTakeHostage then
+    print("Take Hostage feature disabled")
+end
 
 function callTakeHostage()
 	ClearPedSecondaryTask(PlayerPedId())
@@ -92,7 +98,7 @@ function callTakeHostage()
 	end
 
 	if not canTakeHostage then
-		exports['mythic_notify']:DoHudText('inform', _U('nonarmored'))
+		exports['okokNotify']:Alert("Server", "You are not Armed", 5000, 'info')
 	end
 
 	if not takeHostage.InProgress and canTakeHostage then
@@ -107,10 +113,10 @@ function callTakeHostage()
 				ensureAnimDict(takeHostage.agressor.animDict)
 				takeHostage.type = "agressor"
 			else
-				exports['mythic_notify']:DoHudText('inform', _U('noonenearby'))
+		        exports['okokNotify']:Alert("Server", "Noone is nearby", 5000, 'info')
 			end
 		else
-			exports['mythic_notify']:DoHudText('inform', _U('noonenearby'))
+			exports['okokNotify']:Alert("Server", "Noone is nearby", 5000, 'info')
 		end
 	end
 end
@@ -180,7 +186,7 @@ Citizen.CreateThread(function()
 			DisableControlAction(0, 58, true) -- disable weapon
 			DisableControlAction(0, 21, true) -- disable sprint
 			DisablePlayerFiring(PlayerPedId(), true)
-			drawNativeText("<font face = 'Rubik'>[~r~G~w~] Pro Puštění hráče, [~y~H~w~] Pro zabití")
+			drawNativeText(Config.THText or "<font face = 'Rubik'>[~r~G~w~] Let him be, [~y~H~w~] Kill him")
 			if IsEntityDead(PlayerPedId()) then
 				takeHostage.type = ""
 				takeHostage.InProgress = false

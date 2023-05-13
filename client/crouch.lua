@@ -85,14 +85,19 @@ Citizen.CreateThread(function()
 		Citizen.Wait(50)
 	end
 end)
+if Config.EnableCrouch then
+    RegisterCommand('crouch', function()
+    	DisableControlAction(0, Config.CrouchButton, true) -- magic
+    	if not Cooldown then
+    		CrouchedForce = not CrouchedForce
+    		Cooldown = true
+    		SetTimeout(CoolDownTime, function()
+    			Cooldown = false
+    		end)
+    	end
+    end, false)
+end
 
-RegisterCommand('crouch', function()
-	DisableControlAction(0, Config.CrouchButton, true) -- magic
-	if not Cooldown then
-		CrouchedForce = not CrouchedForce
-		Cooldown = true
-		SetTimeout(CoolDownTime, function()
-			Cooldown = false
-		end)
-	end
-end, false)
+if not Config.EnableCrouch then
+    print("Crouch feature disabled")
+end
